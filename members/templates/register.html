@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register</title>
+
+<style>
+:root {
+    --bg-gradient: linear-gradient(135deg, #43cea2, #185a9d);
+    --card-bg: #ffffff;
+    --text-color: #333;
+    --input-bg: #fff;
+    --border-color: #ccc;
+    --btn-bg: #43cea2;
+}
+
+.dark {
+    --bg-gradient: linear-gradient(135deg, #1f2933, #020617);
+    --card-bg: #1e293b;
+    --text-color: #e5e7eb;
+    --input-bg: #020617;
+    --border-color: #334155;
+    --btn-bg: #22c55e;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+    background: var(--bg-gradient);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+}
+
+.container {
+    background: var(--card-bg);
+    padding: 40px;
+    width: 380px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--btn-bg);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: var(--btn-bg);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.link a {
+    color: var(--btn-bg);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    background: var(--card-bg);
+    padding: 8px 14px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+</style>
+</head>
+
+<body>
+
+<div class="toggle" onclick="toggleTheme()">🌙 Dark</div>
+
+<div class="container">
+    <h2>Create Account</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" name="username" required>
+        </div>
+
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" name="email" required>
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" name="password1" required>
+        </div>
+
+        <div class="input-group">
+            <label>Confirm Password</label>
+            <input type="password" name="password2" required>
+        </div>
+
+        <button type="submit">Register</button>
+
+        <div class="link">
+            Already have an account?
+            <a href="{% url 'login' %}">Login</a>
+        </div>
+    </form>
+</div>
+
+<script>
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem(
+        "theme",
+        document.body.classList.contains("dark") ? "dark" : "light"
+    );
+}
+
+// Load saved theme
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+}
+</script>
+
+</body>
+</html>
