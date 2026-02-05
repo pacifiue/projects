@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher List</title>
+    <style>
+        /* Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        a {
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: white;
+            margin-right: 5px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        a[href*="edit"] {
+            background-color: #28a745;
+        }
+
+        a[href*="edit"]:hover {
+            background-color: #218838;
+        }
+
+        a[href*="delete"] {
+            background-color: #dc3545;
+        }
+
+        a[href*="delete"]:hover {
+            background-color: #c82333;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            table, th, td {
+                font-size: 0.9rem;
+            }
+        }
+
+        .add-button {
+            display: block;
+            width: max-content;
+            margin: 10px auto 20px auto;
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .add-button:hover {
+            background-color: #155ab6;
+        }
+    </style>
+</head>
+<body>
+    <h2>Teacher List</h2>
+
+    <a href="{% url 'teacher_register' %}" class="add-button">Add New Teacher</a>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Subject</th>
+            <th>Action</th>
+        </tr>
+
+        {% for t in teachers %}
+        <tr>
+            <td>{{ t.firstname }} {{ t.lastname }}</td>
+            <td>{{ t.email }}</td>
+            <td>{{ t.phone }}</td>
+            <td>{{ t.subject }}</td>
+            <td>
+                <a href="{% url 'edit_teacher' t.id %}">Edit</a>
+                <a href="{% url 'delete_teacher' t.id %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

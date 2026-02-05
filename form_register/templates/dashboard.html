@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        /* Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #1a73e8;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-right: 10px;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        a:hover {
+            background-color: #155ab6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stats {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e8f0fe;
+            border-radius: 10px;
+        }
+
+        .stats p {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .links {
+            margin-top: 30px;
+        }
+
+        .links a {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome {{ request.user.username }}</h2>
+        <a href="{% url 'logout' %}">Logout</a>
+
+        <div class="stats">
+            <h2>Dashboard</h2>
+            <p>Total Students: <b>{{ total_students }}</b></p>
+            <p>Total Teachers: <b>{{ total_teachers }}</b></p>
+        </div>
+
+        <div class="links">
+            <a href="{% url 'student_list' %}">Show Students</a>
+            <a href="{% url 'teacher_list' %}">Show Teachers</a>
+            <a href="{% url 'mark_entry' %}">Record Marks</a>
+            <a href="{% url 'student_register' %}">Add new student</a>
+        </div>
+    </div>
+</body>
+</html>

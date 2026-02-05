@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+
+<style>
+:root {
+    --bg-gradient: linear-gradient(135deg, #667eea, #764ba2);
+    --card-bg: #ffffff;
+    --text-color: #333;
+    --input-bg: #fff;
+    --border-color: #ccc;
+    --btn-bg: #667eea;
+}
+
+.dark {
+    --bg-gradient: linear-gradient(135deg, #1f2933, #111827);
+    --card-bg: #1f2933;
+    --text-color: #e5e7eb;
+    --input-bg: #111827;
+    --border-color: #374151;
+    --btn-bg: #4f46e5;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+    background: var(--bg-gradient);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+}
+
+.container {
+    background: var(--card-bg);
+    padding: 40px;
+    width: 350px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--text-color);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: var(--btn-bg);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    background: var(--card-bg);
+    padding: 8px 12px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+</style>
+</head>
+
+<body>
+<div class="toggle" onclick="toggleTheme()">🌙 Dark</div>
+
+<div class="container">
+    <h2>Login</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" name="username" required>
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" name="password" required>
+        </div>
+
+        <button type="submit">Login</button><br>
+         <p>if you don't have an account: <a href="{%url 'register'%}">click here to register</a></p>
+          {% if messages %}
+    {% for message in messages %}
+        <p style="color:rgb(3, 195, 45); text-align:center;">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+        </form>
+</div>
+
+<script>
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem(
+        "theme",
+        document.body.classList.contains("dark") ? "dark" : "light"
+    );
+}
+
+// Load saved theme
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+}
+</script>
+</body>
+</html>

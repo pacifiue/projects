@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Students List</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+body {
+    background-color: #f4f6f8;
+    padding: 20px;
+}
+
+h2 {
+    color: #1a73e8;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+form input {
+    padding: 10px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 8px 0 0 8px;
+}
+
+form button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #1a73e8;
+    color: white;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 12px;
+}
+
+th {
+    background: #1a73e8;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f9f9f9;
+}
+.back-btn {
+    display: inline-block;
+    margin-bottom: 15px;
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.back-btn:hover {
+    background-color: #5a6268;
+}
+
+
+a.btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.view-btn { background: #17a2b8; }
+.edit-btn { background: #28a745; }
+.delete-btn { background: #dc3545; }
+</style>
+</head>
+
+<body>
+
+<h2>Students</h2>
+<a href="{% url 'dashboard' %}" class="back-btn">← Back to Dashboard</a>
+
+<form method="get">
+    <input type="text" name="q" placeholder="Search student">
+    <button type="submit">Search</button>
+</form>
+
+<table>
+<tr>
+    <th>Name</th>
+    <th>Class</th>
+    <th>Email</th>
+    <th>Father Phone</th>
+    <th>Mother Phone</th>
+    <th>Action</th>
+</tr>
+
+{% for s in students %}
+<tr>
+    <td>{{ s.student_firstname }} {{ s.student_lastname }}</td>
+    <td>{{ s.student_class }}</td>
+    <td>{{ s.student_email }}</td>
+    <td>{{ s.father_phone }}</td>
+    <td>{{ s.mother_phone }}</td>
+    <td>
+        <a href="{% url 'student_detail' s.id %}" class="btn view-btn">View</a>
+        <a href="{% url 'edit_student' s.id %}" class="btn edit-btn">Edit</a>
+        <a href="{% url 'delete_student' s.id %}" class="btn delete-btn">Delete</a>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="6" style="text-align:center;">No students found</td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>

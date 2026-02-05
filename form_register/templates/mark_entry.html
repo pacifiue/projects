@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Record Marks</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            width: 420px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0,0,0,.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 25px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #155ab6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Record Marks</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Teacher -->
+        <select name="teacher" required>
+            <option value="" disabled selected>Select Teacher</option>
+            {% for t in teachers %}
+                <option value="{{ t.id }}">{{ t.firstname }} {{ t.lastname }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Student -->
+        <select name="student" required>
+            <option value="" disabled selected>Select Student</option>
+            {% for s in students %}
+                <option value="{{ s.id }}">
+                    {{ s.student_firstname }} {{ s.student_lastname }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Subject -->
+        <input type="text" name="subject" placeholder="Subject" required>
+
+        <!-- Term -->
+        <select name="term" required>
+            <option value="" disabled selected>Select Term</option>
+            <option value="Term 1">Term 1</option>
+            <option value="Term 2">Term 2</option>
+            <option value="Term 3">Term 3</option>
+        </select>
+
+        <!-- Marks -->
+        <input type="number" name="marks" min="0" max="100" placeholder="Marks" required>
+
+        <button type="submit">Save Marks</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Report</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+        }
+        h2 {
+            background: #2c3e50;
+            color: white;
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #3498db;
+            color: white;
+        }
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            background: #3498db;
+            color: white;
+            padding: 8px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>
+        Report for {{ student.student_firstname }} {{ student.student_lastname }}
+    </h2>
+
+    <table>
+        <tr>
+            <th>Subject</th>
+            <th>Teacher</th>
+            <th>Term</th>
+            <th>Marks</th>
+        </tr>
+
+        {% for m in marks %}
+        <tr>
+            <td>{{ m.subject }}</td>
+            <td>{{ m.teacher.firstname }} {{ m.teacher.lastname }}</td>
+            <td>{{ m.term }}</td>
+            <td>{{ m.marks }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="text-align:center;">
+                No marks recorded for this student
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{% url 'student_detail' student.id %}">Back to Student Detail</a>
+</div>
+
+</body>
+</html>

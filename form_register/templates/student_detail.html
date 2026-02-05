@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            background: #2c3e50;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        .label {
+            font-weight: bold;
+            width: 30%;
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            background: #3498db;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        a:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Student Information</h2>
+    <table>
+        <tr><td class="label">First Name</td><td>{{ student.student_firstname }}</td></tr>
+        <tr><td class="label">Last Name</td><td>{{ student.student_lastname }}</td></tr>
+        <tr><td class="label">Date of Birth</td><td>{{ student.student_dob }}</td></tr>
+        <tr><td class="label">Email</td><td>{{ student.student_email }}</td></tr>
+        <tr><td class="label">National ID</td><td>{{ student.student_national_id }}</td></tr>
+        <tr><td class="label">Phone</td><td>{{ student.student_phone }}</td></tr>
+        <tr><td class="label">Address</td><td>{{ student.student_address }}</td></tr>
+        <tr><td class="label">Class</td><td>{{ student.student_class }}</td></tr>
+        <tr><td class="label">Primary School</td><td>{{ student.primary_school }}</td></tr>
+        <tr><td class="label">Secondary School</td><td>{{ student.secondary_school }}</td></tr>
+    </table>
+
+    <h2>Father Information</h2>
+    <table>
+        <tr><td class="label">Name</td><td>{{ student.father_firstname }} {{ student.father_lastname }}</td></tr>
+        <tr><td class="label">Phone</td><td>{{ student.father_phone }}</td></tr>
+        <tr><td class="label">Email</td><td>{{ student.father_email }}</td></tr>
+        <tr><td class="label">National ID</td><td>{{ student.father_national_id }}</td></tr>
+        <tr><td class="label">Occupation</td><td>{{ student.father_occupation }}</td></tr>
+    </table>
+
+    <h2>Mother Information</h2>
+    <table>
+        <tr><td class="label">Name</td><td>{{ student.mother_firstname }} {{ student.mother_lastname }}</td></tr>
+        <tr><td class="label">Phone</td><td>{{ student.mother_phone }}</td></tr>
+        <tr><td class="label">Email</td><td>{{ student.mother_email }}</td></tr>
+        <tr><td class="label">National ID</td><td>{{ student.mother_national_id }}</td></tr>
+        <tr><td class="label">Occupation</td><td>{{ student.mother_occupation }}</td></tr>
+    </table>
+    <a href="{% url 'student_report' student.id %}"
+   style="background:#27ae60; margin-right:10px;">
+    View Student Report
+    </a>
+
+    <a href="{% url 'student_list' %}">Back to Student List</a>
+
+</div>
+
+</body>
+</html>
