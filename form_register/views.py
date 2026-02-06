@@ -146,9 +146,7 @@ def delete_student(request, student_id):
     return redirect("student_list")
 
 
-# ===========================
 # TEACHER VIEWS
-# ===========================
 @login_required
 def teacher_register(request):
     if request.method == "POST":
