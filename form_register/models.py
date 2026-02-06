@@ -21,7 +21,7 @@ class Student(models.Model):
     # Student Information
     student_firstname = models.CharField(max_length=100)
     student_lastname = models.CharField(max_length=100)
-    student_class = models.CharField(max_length=2, choices=CLASS_CHOICES, default='S1')
+    student_class = models.CharField(max_length=10, choices=CLASS_CHOICES, default='S1')
     student_dob = models.DateField()
     student_email = models.EmailField(blank=True, null=True)
     student_national_id = models.BigIntegerField(unique=True)

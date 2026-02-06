@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Student, Teacher, Mark
 from django.db.models import Sum
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout as auth_logout
+
 
 # ===========================
 # AUTHENTICATION VIEWS
@@ -28,7 +31,7 @@ def home(request):
 
     return render(request, "login.html")
 
-
+@login_required
 def register(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -57,8 +60,8 @@ def register(request):
 
 @login_required
 def logout(request):
-    return redirect("login")
-
+    auth_logout(request)   # 🔥 THIS CLEARS THE SESSION
+    return redirect('login')
 
 # ===========================
 # DASHBOARD
@@ -291,10 +294,13 @@ def parent_port(request):
 # --------------------------
 # Parent Report View
 # --------------------------
+from django.shortcuts import render, get_object_or_404
+from .models import Student, Mark
+
 def parent_report(request, student_code, term=None):
     """
-    Displays student's report for a specific term or all terms.
-    Promotion status is always calculated from all 3 terms.
+    Displays a student's report for a specific term or all terms.
+    Shows yearly summary, class position, and promotion status when all terms are viewed.
     """
     student = get_object_or_404(Student, student_code=student_code)
 
@@ -303,10 +309,11 @@ def parent_report(request, student_code, term=None):
 
     term_reports = []
 
+    # Per-term report
     for t in terms_to_show:
         marks = Mark.objects.filter(student=student, term=t)
         for m in marks:
-            m.percent = round((m.marks / m.total_marks) * 100, 2) if m.total_marks > 0 else 0
+            m.percent = round((m.marks / m.total_marks * 100), 2) if m.total_marks > 0 else 0
 
         quiz_marks = marks.filter(mark_type='Quiz')
         exam_marks = marks.filter(mark_type='Exam')
@@ -322,18 +329,32 @@ def parent_report(request, student_code, term=None):
             "overall_percent": overall_percent
         })
 
-    # ---------------------------
-    # Promotion Status - always calculated from ALL marks
-    # ---------------------------
-    all_marks = Mark.objects.filter(student=student)  # All terms
+    # Overall totals for all terms
+    all_marks = Mark.objects.filter(student=student)
     total_scored_all = sum(m.marks for m in all_marks)
     total_possible_all = sum(m.total_marks for m in all_marks)
     overall_all_percent = round((total_scored_all / total_possible_all * 100) if total_possible_all > 0 else 0, 2)
     promotion_status = "Promoted to next class" if overall_all_percent >= 50 else "Repeated the same class"
 
+    # Class position (based on total marks for the year)
+    class_students = Student.objects.filter(student_class=student.student_class)
+    students_totals = []
+    for s in class_students:
+        s_marks = Mark.objects.filter(student=s)
+        s_total = sum(m.marks for m in s_marks)
+        students_totals.append({"student": s, "total": s_total})
+
+    students_totals.sort(key=lambda x: x["total"], reverse=True)
+    position = next((i + 1 for i, x in enumerate(students_totals) if x["student"] == student), None)
+
     return render(request, 'parent_report.html', {
         "student": student,
         "term_reports": term_reports,
-        "promotion_status": promotion_status,  # Always for all 3 terms
-        "all_terms": all_terms
+        "promotion_status": promotion_status,
+        "all_terms": all_terms,
+        "overall_all_percent": overall_all_percent,
+        "position": position,
+        "show_position": term is None,  # Show yearly summary only for "all terms"
+        "total_scored_all": total_scored_all,
+        "total_possible_all": total_possible_all
     })

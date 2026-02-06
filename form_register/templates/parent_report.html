@@ -2,128 +2,255 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ student.student_firstname }} {{ student.student_lastname }} - Reports</title>
+    <title>{{ student.student_firstname }} {{ student.student_lastname }} - Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
-        /* Base styles */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; color: #1f2937; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.1); }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            padding: 20px;
+            color: #1f2937;
+        }
 
-        h1, h2, h3 { margin-bottom: 15px; }
-        h1 { text-align: center; color: #2563eb; }
-        h2 { color: #10b981; margin-top: 30px; }
-        h3 { color: #2563eb; }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
 
-        p { margin: 5px 0; font-size: 16px; }
+        h1 {
+            text-align: center;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #10b981;
+            margin-top: 30px;
+        }
+
+        h3 {
+            color: #2563eb;
+            margin-top: 20px;
+        }
+
+        p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        /* Buttons */
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+
+        .back-btn {
+            background: #6b7280;
+            color: white;
+        }
+
+        .print-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
 
         /* Term buttons */
-        .term-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; }
-        .term-buttons a {
-            text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            background: #2563eb;
-            color: #fff;
-            font-weight: bold;
-            transition: 0.3s;
+        .term-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
         }
-        .term-buttons a:hover { background: #1e40af; }
-        .term-buttons .all-terms { background: #10b981; }
-        .term-buttons .all-terms:hover { background: #0f766e; }
+
+        .term-buttons a {
+            padding: 8px 14px;
+            background: #2563eb;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .term-buttons .all-terms {
+            background: #10b981;
+        }
 
         /* Tables */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { padding: 12px 10px; text-align: center; border-bottom: 1px solid #cbd5e1; }
-        th { background-color: #2563eb; color: #fff; font-weight: bold; }
-        td { background-color: #f9fafb; transition: background 0.2s; }
-        tr:hover td { background-color: #e0f2fe; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+        }
+
+        tr:hover td {
+            background: #e0f2fe;
+        }
 
         /* Status */
-        .status-pass { color: #10b981; font-weight: bold; font-size: 18px; }
-        .status-fail { color: #ef4444; font-weight: bold; font-size: 18px; }
+        .status-pass {
+            color: #10b981;
+            font-weight: bold;
+            font-size: 18px;
+        }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            th, td { font-size: 14px; padding: 8px; }
-            .term-buttons a { font-size: 14px; padding: 8px 14px; }
+        .status-fail {
+            color: #ef4444;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .actions,
+            .term-buttons {
+                display: none;
+            }
+
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+            }
+
+            table, th, td {
+                border: 1px solid black;
+            }
+
+            th {
+                background: #ddd !important;
+                color: black;
+            }
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
-    <h1>{{ student.student_firstname }} {{ student.student_lastname }}</h1>
-    <p><strong>Student Code:</strong> {{ student.student_code }}</p>
-    <p><strong>Class:</strong> {{ student.student_class }}</p>
 
-    <!-- Term Buttons -->
-    <div class="term-buttons">
-        {% for t in all_terms %}
-            <a href="{% url 'parent_report_term' student.student_code t %}">{{ t }}</a>
-        {% endfor %}
-        <a href="{% url 'parent_report' student.student_code %}" class="all-terms">Show All Terms</a>
+    <!-- ACTION BUTTONS -->
+    <div class="actions">
+        <a href="{% url 'dashboard' %}" class="btn back-btn">← Back</a>
+        <button onclick="window.print()" class="btn print-btn">🖨️ Print Report</button>
     </div>
 
-    <!-- Yearly Summary / Position (only for all terms) -->
-    {% if show_position %}
+    <!-- PRINTABLE AREA -->
+    <div id="report-area">
+
+        <h1>Student Academic Report</h1>
+
+        <p><strong>Name:</strong> {{ student.student_firstname }} {{ student.student_lastname }}</p>
+        <p><strong>Student Code:</strong> {{ student.student_code }}</p>
+        <p><strong>Class:</strong> {{ student.student_class }}</p>
+
+        <!-- TERM FILTER -->
+        <div class="term-buttons">
+            {% for t in all_terms %}
+                <a href="{% url 'parent_report_term' student.student_code t %}">{{ t }}</a>
+            {% endfor %}
+            <a href="{% url 'parent_report' student.student_code %}" class="all-terms">All Terms</a>
+        </div>
+
+        <!-- YEARLY SUMMARY -->
+        {% if show_position %}
         <h2>Yearly Summary</h2>
-        <p><strong>Total Marks Scored:</strong> {{ total_scored_all }}</p>
-        <p><strong>Total Marks Possible:</strong> {{ total_possible_all }}</p>
+        <p><strong>Total Scored:</strong> {{ total_scored_all }}</p>
+        <p><strong>Total Possible:</strong> {{ total_possible_all }}</p>
         <p><strong>Overall Percentage:</strong> {{ overall_all_percent }}%</p>
-        <p><strong>Class Position:</strong> {{ position }}</p>
-    {% endif %}
+        <p><strong>Final Position:</strong> {{ position }}</p>
+        {% endif %}
 
-    <!-- Term Reports -->
-    {% for report in term_reports %}
-        <h2>{{ report.term }}</h2>
+        <!-- TERM REPORTS -->
+        {% for report in term_reports %}
+            <h2>{{ report.term }}</h2>
 
-        <h3>Quiz Marks</h3>
-        <table>
-            <tr>
-                <th>Subject</th>
-                <th>Marks</th>
-                <th>Total Marks</th>
-                <th>Percentage</th>
-            </tr>
-            {% for m in report.quiz_marks %}
+            <h3>Quiz Marks</h3>
+            <table>
+                <tr>
+                    <th>Subject</th>
+                    <th>Marks</th>
+                    <th>Total</th>
+                    <th>%</th>
+                </tr>
+                {% for m in report.quiz_marks %}
                 <tr>
                     <td>{{ m.subject }}</td>
                     <td>{{ m.marks }}</td>
                     <td>{{ m.total_marks }}</td>
                     <td>{{ m.percent }}%</td>
                 </tr>
-            {% empty %}
-                <tr><td colspan="4">No quiz marks available.</td></tr>
-            {% endfor %}
-        </table>
+                {% empty %}
+                <tr><td colspan="4">No quiz marks</td></tr>
+                {% endfor %}
+            </table>
 
-        <h3>Exam Marks</h3>
-        <table>
-            <tr>
-                <th>Subject</th>
-                <th>Marks</th>
-                <th>Total Marks</th>
-                <th>Percentage</th>
-            </tr>
-            {% for m in report.exam_marks %}
+            <h3>Exam Marks</h3>
+            <table>
+                <tr>
+                    <th>Subject</th>
+                    <th>Marks</th>
+                    <th>Total</th>
+                    <th>%</th>
+                </tr>
+                {% for m in report.exam_marks %}
                 <tr>
                     <td>{{ m.subject }}</td>
                     <td>{{ m.marks }}</td>
                     <td>{{ m.total_marks }}</td>
                     <td>{{ m.percent }}%</td>
                 </tr>
-            {% empty %}
-                <tr><td colspan="4">No exam marks available.</td></tr>
-            {% endfor %}
-        </table>
+                {% empty %}
+                <tr><td colspan="4">No exam marks</td></tr>
+                {% endfor %}
+            </table>
 
-        <p><strong>Overall Percentage:</strong> {{ report.overall_percent }}%</p>
-    {% endfor %}
+            <p><strong>Term Percentage:</strong> {{ report.overall_percent }}%</p>
+            <p><strong>Term Position:</strong> {{ report.position }}</p>
+        {% endfor %}
 
-    <h2>Status:</h2>
-    <p class="{% if 'Promoted' in promotion_status %}status-pass{% else %}status-fail{% endif %}">
-        {{ promotion_status }}
-    </p>
+        <h2>Status</h2>
+        <p class="{% if 'Promoted' in promotion_status %}status-pass{% else %}status-fail{% endif %}">
+            {{ promotion_status }}
+        </p>
+
+    </div>
 </div>
 
 </body>
