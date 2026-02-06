@@ -125,6 +125,7 @@
             <li><strong>Full Name:</strong> {{ request.user.get_full_name }}</li>
             <li><strong>Email:</strong> {{ request.user.email }}</li>
             <li><hr class="dropdown-divider"></li>
+            
             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
         </ul>
     </div>
@@ -137,6 +138,7 @@
     <a href="{% url 'mark_entry' %}">Record Marks</a>
     <a href="{% url 'student_register' %}">Add Student</a>
     <hr class="text-light">
+    <p>if you don't have an account: <a href="{%url 'register'%}">click here to register</a></p>
     <a href="{% url 'logout' %}">Logout</a>
 </div>
 

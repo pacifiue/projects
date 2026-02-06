@@ -261,52 +261,79 @@ def student_report(request, student_id, term='Term 1'):
     })
 
 
-# ===========================
-# PARENT PORT
-# ===========================
+# --------------------------
+# School Home Page
+# --------------------------
+def school(request):
+    return render(request, 'school.html')
+
+
+# --------------------------
+# Parents Portal (Form)
+# --------------------------
 def parent_port(request):
+    """
+    Handles student code submission by parents.
+    Redirects to the parent_report view if code is valid.
+    """
     context = {}
     if request.method == "POST":
         code = request.POST.get('student_code')
         student = Student.objects.filter(student_code=code).first()
         if student:
-            return render(request, 'parent_report.html', {'student': student})
+            # Redirect to parent_report URL with student_code as URL parameter
+            return redirect('parent_report', student_code=student.student_code)
         else:
             context['error'] = "Invalid student code."
     return render(request, 'parent.html', context)
 
 
-def parent_report(request):
-    code = request.GET.get('student_code')
-    student = get_object_or_404(Student, student_code=code)
+# --------------------------
+# Parent Report View
+# --------------------------
+def parent_report(request, student_code, term=None):
+    """
+    Displays student's report for a specific term or all terms.
+    Promotion status is always calculated from all 3 terms.
+    """
+    student = get_object_or_404(Student, student_code=student_code)
 
-    terms = ['Term 1', 'Term 2', 'Term 3']
+    all_terms = ['Term 1', 'Term 2', 'Term 3']
+    terms_to_show = [term] if term in all_terms else all_terms
+
     term_reports = []
 
-    for term in terms:
-        marks = Mark.objects.filter(student=student, term=term)
+    for t in terms_to_show:
+        marks = Mark.objects.filter(student=student, term=t)
         for m in marks:
-            m.percent = round((m.marks / m.total_marks) * 100, 2)
+            m.percent = round((m.marks / m.total_marks) * 100, 2) if m.total_marks > 0 else 0
+
         quiz_marks = marks.filter(mark_type='Quiz')
         exam_marks = marks.filter(mark_type='Exam')
+
         total_scored = sum(m.marks for m in marks)
         total_possible = sum(m.total_marks for m in marks)
         overall_percent = round((total_scored / total_possible * 100) if total_possible > 0 else 0, 2)
+
         term_reports.append({
-            "term": term,
+            "term": t,
             "quiz_marks": quiz_marks,
             "exam_marks": exam_marks,
             "overall_percent": overall_percent
         })
 
-    all_marks = Mark.objects.filter(student=student)
+    # ---------------------------
+    # Promotion Status - always calculated from ALL marks
+    # ---------------------------
+    all_marks = Mark.objects.filter(student=student)  # All terms
     total_scored_all = sum(m.marks for m in all_marks)
     total_possible_all = sum(m.total_marks for m in all_marks)
-    overall_all_percent = (total_scored_all / total_possible_all * 100) if total_possible_all > 0 else 0
+    overall_all_percent = round((total_scored_all / total_possible_all * 100) if total_possible_all > 0 else 0, 2)
     promotion_status = "Promoted to next class" if overall_all_percent >= 50 else "Repeated the same class"
 
     return render(request, 'parent_report.html', {
         "student": student,
         "term_reports": term_reports,
-        "promotion_status": promotion_status
+        "promotion_status": promotion_status,  # Always for all 3 terms
+        "all_terms": all_terms
     })

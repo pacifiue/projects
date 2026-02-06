@@ -3,10 +3,11 @@ from . import views
 
 urlpatterns = [
     # Authentication
-    path('', views.home, name='login'),
+    path('', views.school, name='school'),
     path('register/', views.register, name='register'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('logout/', views.logout, name='logout'),
+    path('login/', views.home, name='login'),
 
     # Student
     path('student/register/', views.student_register, name='student_register'),
@@ -18,8 +19,9 @@ urlpatterns = [
     path('student/report/<int:student_id>/<str:term>/', views.student_report, name='student_report_term'),
 
     # Parent
-    path('parent/', views.parent_port, name='parent_port'),
-    path('parent/report/<str:student_code>/', views.parent_report, name='parent_report'),
+    path('parent/', views.parent_port, name='parent_port'),  # portal form
+    path('parent/report/<str:student_code>/', views.parent_report, name='parent_report'),  # all terms
+    path('parent/report/<str:student_code>/<str:term>/', views.parent_report, name='parent_report_term'),  # specific term
 
     # Teacher
     path('teacher/register/', views.teacher_register, name='teacher_register'),
