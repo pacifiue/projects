@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ student.student_firstname }} {{ student.student_lastname }} - Reports</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; padding: 30px; }
+        .report-wrapper { max-width: 900px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        h1, h2, h3 { color: #1f2937; }
+        h1 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 10px; border: 1px solid #cbd5e1; text-align: center; }
+        th { background-color: #2563eb; color: #fff; }
+        td { background-color: #f9fafb; }
+        .status-pass { color: green; }
+        .status-fail { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="report-wrapper">
+    <h1>{{ student.student_firstname }} {{ student.student_lastname }}</h1>
+    <p><strong>Student Code:</strong> {{ student.student_code }}</p>
+    <p><strong>Class:</strong> {{ student.student_class }}</p>
+
+    {% for report in term_reports %}
+        <h2>{{ report.term }}</h2>
+
+        <h3>Quiz Marks</h3>
+        <table>
+            <tr><th>Subject</th><th>Marks</th><th>Total Marks</th><th>Percentage</th></tr>
+            {% for m in report.quiz_marks %}
+                <tr>
+                    <td>{{ m.subject }}</td>
+                    <td>{{ m.marks }}</td>
+                    <td>{{ m.total_marks }}</td>
+                    <td>{{ m.percent }}%</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4">No quiz marks available.</td></tr>
+            {% endfor %}
+        </table>
+
+        <h3>Exam Marks</h3>
+        <table>
+            <tr><th>Subject</th><th>Marks</th><th>Total Marks</th><th>Percentage</th></tr>
+            {% for m in report.exam_marks %}
+                <tr>
+                    <td>{{ m.subject }}</td>
+                    <td>{{ m.marks }}</td>
+                    <td>{{ m.total_marks }}</td>
+                    <td>{{ m.percent }}%</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4">No exam marks available.</td></tr>
+            {% endfor %}
+        </table>
+
+        <p><strong>Overall Percentage:</strong> {{ report.overall_percent }}%</p>
+    {% endfor %}
+
+    <h2>Status:</h2>
+    <p class="{% if 'Promoted' in promotion_status %}status-pass{% else %}status-fail{% endif %}">{{ promotion_status }}</p>
+
+</div>
+
+</body>
+</html>

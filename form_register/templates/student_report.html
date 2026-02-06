@@ -1,80 +1,203 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Student Report</title>
+    <meta charset="UTF-8">
+    <title>Student Report - {{ student.student_firstname }} {{ student.student_lastname }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
         body {
-            font-family: Arial;
-            background: #f4f6f8;
-            padding: 20px;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 30px;
         }
-        .container {
-            max-width: 800px;
+
+        .report-wrapper {
+            max-width: 1000px;
             margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 6px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        h2 {
-            background: #2c3e50;
-            color: white;
-            padding: 10px;
+
+        h1, h2, h3 {
+            color: #1f2937;
+            margin-bottom: 20px;
         }
+
+        h1 {
+            text-align: center;
+        }
+
+        .student-info, .summary {
+            margin-bottom: 25px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .info-grid p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #374151;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 25px;
         }
+
         th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            text-align: center;
         }
+
         th {
-            background: #3498db;
-            color: white;
+            background-color: #2563eb;
+            color: #ffffff;
         }
-        a {
+
+        td {
+            background-color: #f9fafb;
+        }
+
+        .summary p {
+            font-size: 16px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .back-button {
             display: inline-block;
-            margin-top: 15px;
-            background: #3498db;
-            color: white;
-            padding: 8px 12px;
+            padding: 10px 18px;
+            background-color: #2563eb;
+            color: #fff;
             text-decoration: none;
-            border-radius: 4px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            margin-right: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #1e40af;
+        }
+
+        .status-pass {
+            color: green;
+        }
+
+        .status-fail {
+            color: red;
+        }
+
+        .term-buttons {
+            text-align: center;
+            margin-bottom: 20px;
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h2>
-        Report for {{ student.student_firstname }} {{ student.student_lastname }}
-    </h2>
+<div class="report-wrapper">
 
+    <!-- Term Selection Buttons -->
+    <div class="term-buttons">
+        <a href="{% url 'student_report_term' student.id 'Term 1' %}" class="back-button">1st Term</a>
+        <a href="{% url 'student_report_term' student.id 'Term 2' %}" class="back-button">2nd Term</a>
+        <a href="{% url 'student_report_term' student.id 'Term 3' %}" class="back-button">3rd Term</a>
+    </div>
+
+    <h1>Student Report - {{ term }}</h1>
+
+    <!-- Student Information -->
+    <div class="student-info">
+        <h2>{{ student.student_firstname }} {{ student.student_lastname }}</h2>
+        <p><strong>Student Code:</strong> {{ student.student_code }}</p>
+        <div class="info-grid">
+            <p><strong>Class:</strong> {{ student.student_class }}</p>
+            <p><strong>Date of Birth:</strong> {{ student.student_dob }}</p>
+            <p><strong>Email:</strong> {{ student.student_email }}</p>
+            <p><strong>Phone:</strong> {{ student.student_phone }}</p>
+            <p><strong>Address:</strong> {{ student.student_address }}</p>
+        </div>
+    </div>
+
+    <!-- Quiz Marks -->
+    <h3>Quiz Marks</h3>
     <table>
-        <tr>
-            <th>Subject</th>
-            <th>Teacher</th>
-            <th>Term</th>
-            <th>Marks</th>
-        </tr>
-
-        {% for m in marks %}
-        <tr>
-            <td>{{ m.subject }}</td>
-            <td>{{ m.teacher.firstname }} {{ m.teacher.lastname }}</td>
-            <td>{{ m.term }}</td>
-            <td>{{ m.marks }}</td>
-        </tr>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Marks</th>
+                <th>Total Marks</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for m in quiz_marks %}
+            <tr>
+                <td>{{ m.subject }}</td>
+                <td>{{ m.marks }}</td>
+                <td>{{ m.total_marks }}</td>
+                <td>{{ m.percent }}%</td>
+            </tr>
         {% empty %}
-        <tr>
-            <td colspan="4" style="text-align:center;">
-                No marks recorded for this student
-            </td>
-        </tr>
+            <tr><td colspan="4">No quiz marks available.</td></tr>
         {% endfor %}
+        </tbody>
     </table>
 
-    <a href="{% url 'student_detail' student.id %}">Back to Student Detail</a>
+    <!-- Exam Marks -->
+    <h3>Exam Marks</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Marks</th>
+                <th>Total Marks</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for m in exam_marks %}
+            <tr>
+                <td>{{ m.subject }}</td>
+                <td>{{ m.marks }}</td>
+                <td>{{ m.total_marks }}</td>
+                <td>{{ m.percent }}%</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="4">No exam marks available.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Summary -->
+    <div class="summary">
+        <p><strong>Overall Percentage:</strong> {{ overall_percent }}%</p>
+        <p><strong>Class Position:</strong> {{ position }} of {{ class_total }}</p>
+
+        {% if term == 'Term 3' and promotion_status %}
+            <p><strong>Status:</strong> 
+                <span class="{% if 'Promoted' in promotion_status %}status-pass{% else %}status-fail{% endif %}">
+                    {{ promotion_status }}
+                </span>
+            </p>
+        {% endif %}
+    </div>
+
 </div>
 
 </body>
